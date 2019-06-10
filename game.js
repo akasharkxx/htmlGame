@@ -35,6 +35,29 @@ function begin(){
     requestAnimFrame(loop);
 }
 
-function loop(){
+function update() {
+    clearCtx(ctxEntities);
+    // updateAllEnemies();
+    // player1.update();
+}
 
+function draw() {
+    // drawAllEnemies();
+    // player1.draw();
+}
+function loop(){
+    if(isPlaying){
+        console.log("looping");
+        update();
+        draw();
+        requestAnimFrame(loop);
+    }
+}
+
+function clearCtx(ctx){
+    ctxBg.clearRect(0, 0, canvasWidth, canvasHeight);
+}
+
+function randomRange(min, max){
+    return Math.floor(Math.random() * (max + 1 - min)) + min;
 }
