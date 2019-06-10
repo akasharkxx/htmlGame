@@ -4,7 +4,7 @@ var canvasBg = document.getElementById("canvasBg"),
     ctxEntities = canvasEntities.getContext("2d"),
     canvasWidth = canvasBg.width,
     canvasHeight = canvasBg.height,
-    //player = new Player(),
+    player1 = new Player(),
     //enemies = [],
     //numEnemies = 5,
     //obstacles = [],
@@ -38,16 +38,16 @@ function begin(){
 function update() {
     clearCtx(ctxEntities);
     // updateAllEnemies();
-    // player1.update();
+    player1.update();
 }
 
 function draw() {
     // drawAllEnemies();
-    // player1.draw();
+    player1.draw();
 }
 function loop(){
     if(isPlaying){
-        console.log("looping");
+        //console.log("looping");
         update();
         draw();
         requestAnimFrame(loop);
@@ -55,7 +55,7 @@ function loop(){
 }
 
 function clearCtx(ctx){
-    ctxBg.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctxEntities.clearRect(0, 0, canvasWidth, canvasHeight);
 }
 
 function randomRange(min, max){
@@ -84,11 +84,17 @@ function Player() {
     // for(var i = 0, i < numBullets; i++){
         // this.bullets[this.bullets.length] = new Bullet();
     // }
-}
+};
 
-Player.prototype.update() = function (){
+Player.prototype.update = function (){
     this.centerX = this.drawX + (this.width / 2);
     this.centerY = this.drawY + (this.height / 2);
     //this.checkDirection();
     //this.checkShooting();
+    // this.updateAllBullets();
+};
+
+Player.prototype.draw = function(){
+    // this.drawAllBullets();
+    ctxEntities.drawImage(imgSprite, this.srcX, this.srcY, this.width, this.height, this.drawX, this.drawY, this.width, this.height);
 };
