@@ -22,8 +22,8 @@ imgSprite.src = "images/sprite.png";
 imgSprite.addEventListener("load", init, false);
 
 function init(){
-    // document.addEventListener("keydown", checkKeyDown, false);
-    // document.addEventListener("keyup", checkKeyUp, false);
+    document.addEventListener("keydown",function(e) {checkKey(e, true);}, false);
+    document.addEventListener("keyup", function(e) {checkKey(e, true);}, false);
     // defineObstacles();
     // initEnemies();
     begin();
@@ -72,11 +72,11 @@ function Player() {
     this.centerX = this.drawX + (this.width / 2);
     this.centerY = this.drawY + (this.height / 2);
     this.speed = 2;
-    // this.isUpKey = false;
-    // this.isDownKey = false;
-    // this.isRightKey = false;
-    // this.isLeftKey = false;
-    // this.isSpacebar = false;
+    this.isUpKey = false;
+    this.isDownKey = false;
+    this.isRightKey = false;
+    this.isLeftKey = false;
+    this.isSpacebar = false;
     // this.isShooting = false;
     // var numBullets = 10;
     // this.bullets = [];
@@ -98,3 +98,29 @@ Player.prototype.draw = function(){
     // this.drawAllBullets();
     ctxEntities.drawImage(imgSprite, this.srcX, this.srcY, this.width, this.height, this.drawX, this.drawY, this.width, this.height);
 };
+
+
+fucntion checkKey(e, value) {
+    var keyID = e.keyCode || e.which;
+    if (keyID === 38) { //Up arrow
+        player1.isUpkey = value;
+        e.preventDefault(); //prevents form scrolling the page
+    }
+    if (keyID === 39) { //Right arrow
+        player1.isRightkey = value;
+        e.preventDefault(); //prevents form scrolling the page
+    }
+    if (keyID === 40) { //Down arrow
+        player1.isDownkey = value;
+        e.preventDefault(); //prevents form scrolling the page
+    } 
+    if (keyID === 37) { //Left arrow
+        player1.isLeftkey = value;
+        e.preventDefault(); //prevents form scrolling the page
+    }
+    if (keyID === 32) { //Spacebar
+        player1.isSpacebar = value;
+        e.preventDefault(); //prevents form scrolling the page
+    }
+
+}
