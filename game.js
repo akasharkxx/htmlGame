@@ -30,5 +30,11 @@ function init(){
 }
 
 function begin(){
-    
+    ctxBg.drawImage(imgSprite, 0, 0, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
+    isPlaying = true;
+    requestAnimFrame(loop);
+}
+
+function loop(){
+
 }
