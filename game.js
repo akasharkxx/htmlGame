@@ -18,3 +18,17 @@ var canvasBg = document.getElementById("canvasBg"),
                            window.setTimeout(callback, 1000/60);
                        },
     imgSprite = new Image();
+imgSprite.src = "images/sprite.png";
+imgSprite.addEventListener("load", init, false);
+
+function init(){
+    // document.addEventListener("keydown", checkKeyDown, false);
+    // document.addEventListener("keyup", checkKeyUp, false);
+    // defineObstacles();
+    // initEnemies();
+    begin();
+}
+
+function begin(){
+    
+}
