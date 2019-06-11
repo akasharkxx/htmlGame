@@ -15,7 +15,7 @@ var canvasBg = document.getElementById("canvasBg"),
                        window.oRequestAnimationFrame ||
                        window.msRequestAnimationFrame ||
                        function(callback) {
-                           window.setTimeout(callback, 1000/60);
+                           window.setTimeout(callback, 1000 / 60);
                        },
     imgSprite = new Image();
 imgSprite.src = "images/sprite.png";
@@ -23,8 +23,8 @@ imgSprite.addEventListener("load", init, false);
 
 function init(){
     document.addEventListener("keydown",function(e) {checkKey(e, true);}, false);
-    document.addEventListener("keyup", function(e) {checkKey(e, true);}, false);
-    // defineObstacles();
+    document.addEventListener("keyup", function(e) {checkKey(e, false);}, false);
+    //defineObstacles();
     // initEnemies();
     begin();
 }
@@ -47,7 +47,6 @@ function draw() {
 }
 function loop(){
     if(isPlaying){
-        //console.log("looping");
         update();
         draw();
         requestAnimFrame(loop);
@@ -55,7 +54,7 @@ function loop(){
 }
 
 function clearCtx(ctx){
-    ctxEntities.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 }
 
 function randomRange(min, max){
@@ -84,12 +83,12 @@ function Player() {
     // for(var i = 0, i < numBullets; i++){
         // this.bullets[this.bullets.length] = new Bullet();
     // }
-};
+}
 
 Player.prototype.update = function (){
     this.centerX = this.drawX + (this.width / 2);
     this.centerY = this.drawY + (this.height / 2);
-    //this.checkDirection();
+    this.checkDirection();
     //this.checkShooting();
     // this.updateAllBullets();
 };
@@ -99,28 +98,67 @@ Player.prototype.draw = function(){
     ctxEntities.drawImage(imgSprite, this.srcX, this.srcY, this.width, this.height, this.drawX, this.drawY, this.width, this.height);
 };
 
+Player.prototype.checkDirection = function(){
+    var newDrawX = this.drawX,
+        newDrawY = this.drawY,
+        obstacleCollision = false;
+        if(this.isUpKey){
+            newDrawY -= this.speed;
+            this.srcX = 35; //Facing north
+        }else if(this.isDownKey){ 
+            newDrawY += this.speed;
+            this.srcX = 0; //Facing south
+        }else if(this.isRightKey){
+            newDrawX += this.speed;
+            this.srcX = 105; //Facing east
+        }else if(this.isLeftKey){
+            newDrawX -= this.speed;
+            this.srcX = 70; //Facing west
+        }
 
-fucntion checkKey(e, value) {
+        //obstacleCollision = this.checkObstacleCollide(newDrawX, newDrawY);
+
+        if (!obstacleCollision && !outOfBounds(this, newDrawX, newDrawY)){
+            this.drawX = newDrawX;
+            this.drawY = newDrawY;
+        }
+};
+
+function checkKey(e, value){
     var keyID = e.keyCode || e.which;
     if (keyID === 38) { //Up arrow
-        player1.isUpkey = value;
+        player1.isUpKey = value;
         e.preventDefault(); //prevents form scrolling the page
     }
     if (keyID === 39) { //Right arrow
-        player1.isRightkey = value;
+        player1.isRightKey = value;
         e.preventDefault(); //prevents form scrolling the page
     }
-    if (keyID === 40) { //Down arrow
-        player1.isDownkey = value;
-        e.preventDefault(); //prevents form scrolling the page
-    } 
-    if (keyID === 37) { //Left arrow
-        player1.isLeftkey = value;
+    if (keyID === 40) { // Down arrow
+        player1.isDownKey = value;
         e.preventDefault(); //prevents form scrolling the page
     }
-    if (keyID === 32) { //Spacebar
+    if (keyID === 37) { // Left arrow
+        player1.isLeftKey = value;
+        e.preventDefault(); //prevents form scrolling the page
+    }
+    if (keyID === 32) { // Spacebar
         player1.isSpacebar = value;
-        e.preventDefault(); //prevents form scrolling the page
+        e.preventDefault();
     }
+}
 
+function outOfBounds(a, x, y) {
+    var newTopY = y,
+        newBottomY = y + a.height,
+        newRightX = x + a.width,
+        newLeftX = x,
+        treeLineTop = 5,
+        treeLineBottom = 570,
+        treeLineRight = 750,
+        treeLineLeft = 65;
+    return newBottomY > treeLineBottom ||
+        newTopY < treeLineTop ||
+        newRightX > treeLineRight ||
+        newLeftX < treeLineLeft;
 }
