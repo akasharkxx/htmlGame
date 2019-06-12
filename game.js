@@ -7,7 +7,7 @@ var canvasBg = document.getElementById("canvasBg"),
     player1 = new Player(),
     //enemies = [],
     //numEnemies = 5,
-    //obstacles = [],
+    obstacles = [],
     isPlaying = false,
     requestAnimFrame = window.requestAnimationFrame ||
                        window.webkitRequestAnimationFrame ||
@@ -24,7 +24,7 @@ imgSprite.addEventListener("load", init, false);
 function init(){
     document.addEventListener("keydown",function(e) {checkKey(e, true);}, false);
     document.addEventListener("keyup", function(e) {checkKey(e, false);}, false);
-    //defineObstacles();
+    defineObstacles();
     // initEnemies();
     begin();
 }
@@ -123,6 +123,34 @@ Player.prototype.checkDirection = function(){
             this.drawY = newDrawY;
         }
 };
+
+function Obstacle(x, y, w, h){
+    this.drawX = x;
+    this.drawY = y;
+    this.width = w;
+    this.height = h;
+    this.leftX = this.drawX;
+    this.rightX = this.drawX + this.width;
+    this.topY = this.drawY;
+    this.bottomY = this.drawY + this.height;
+}
+
+function definObjects() {
+    var treeWidth = 65,
+        treeHeight = 90,
+        rockDimensions = 30,
+        bushheight = 28;
+
+        obstacles = [new Obstacle(78, 360, treeWidth, treeHeight),
+            new Obstacle(390, 395, treeWidth, treeHeight),
+            new Obstacle(415, 102, treeWidth, treeHeight),
+            new Obstacle(619, 184, treeWidth, treeHeight),
+            new Obstacle(97, 63, rockDimensions, rockDimensions),
+            new Obstacle(296, 379, rockDimensions, rockDimensions),
+            new Obstacle(295, 25, 150, bushheight),
+            new Obstacle(570, 138, 150, bushheight),
+            new Obstacle(605, 492, 90, bushheight)];
+}
 
 function checkKey(e, value){
     var keyID = e.keyCode || e.which;
