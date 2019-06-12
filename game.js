@@ -25,7 +25,7 @@ function init(){
     document.addEventListener("keydown",function(e) {checkKey(e, true);}, false);
     document.addEventListener("keyup", function(e) {checkKey(e, false);}, false);
     defineObstacles();
-    // initEnemies();
+    initEnemies();
     begin();
 }
 
@@ -37,12 +37,12 @@ function begin(){
 
 function update() {
     clearCtx(ctxEntities);
-    // updateAllEnemies();
+    updateAllEnemies();
     player1.update();
 }
 
 function draw() {
-    // drawAllEnemies();
+    drawAllEnemies();
     player1.draw();
 }
 function loop(){
@@ -187,6 +187,34 @@ function defineObstacles() {
             new Obstacle(295, 25, 150, bushheight),
             new Obstacle(570, 138, 150, bushheight),
             new Obstacle(605, 492, 90, bushheight)];
+}
+
+Enemy.prototype.update = function(){
+    // this.checkDirection
+    this.centerX = this.drawX + (this.width / 2);
+    this.centerY = this.drawY + (this.height / 2);
+}
+
+Enemy.prototype.draw = function(){
+    ctxEntities.drawImage(imgSprite, this.srcX, this.srcY, this.width, this.height, this.drawX, this.drawY, this.width, this.height);
+};
+
+function initEnemies(){
+    for(var i = 0; i < numEnemies; i++){
+        enemies[enemies.length] = new Enemy();
+    }
+}
+
+function updateAllEnemies(){
+    for(var i = 0; i < enemies.length; i++){
+        enemies[i].update();
+    }
+}
+
+function drawAllEnemies(){
+    for(var i = 0; i < enemies.length; i++){
+        enemies[i].draw();
+    }
 }
 
 function checkKey(e, value){
