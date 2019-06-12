@@ -5,8 +5,8 @@ var canvasBg = document.getElementById("canvasBg"),
     canvasWidth = canvasBg.width,
     canvasHeight = canvasBg.height,
     player1 = new Player(),
-    //enemies = [],
-    //numEnemies = 5,
+    enemies = [],
+    numEnemies = 5,
     obstacles = [],
     isPlaying = false,
     requestAnimFrame = window.requestAnimationFrame ||
@@ -85,6 +85,23 @@ function Player() {
     // }
 }
 
+function Enemy(){
+    this.srcX = 140;
+    this.srcY = 600;
+    this.width = 45;
+    this.height = 54;
+    this.drawX = randomRange(0, canvasWidth - this.width);
+    this.drawY = randomRange(0, canvasHeight - this.height);
+    this.centerX = this.drawX + (this.width / 2);
+    this.centerY = this.drawY + (this.height / 2);
+    //this.targetX = this.centerX;
+    //this.targetY = this.centerY;
+    //this.randomMoveTime = randomRange(4000,10000);
+    this.speed = 1;
+    //var that = this;
+    // this.moveInterval = setInterval(function() {that.setTargetLocation();}, that.random)
+    this.isDead = false;
+}
 Player.prototype.update = function (){
     this.centerX = this.drawX + (this.width / 2);
     this.centerY = this.drawY + (this.height / 2);
@@ -116,12 +133,32 @@ Player.prototype.checkDirection = function(){
             this.srcX = 70; //Facing west
         }
 
-        //obstacleCollision = this.checkObstacleCollide(newDrawX, newDrawY);
+        obstacleCollision = this.checkObstacleCollide(newDrawX, newDrawY);
 
         if (!obstacleCollision && !outOfBounds(this, newDrawX, newDrawY)){
             this.drawX = newDrawX;
             this.drawY = newDrawY;
         }
+};
+
+Player.prototype.checkObstacleCollide = function(newDrawX, newDrawY){
+    var obstacleCounter = 0,
+    newCenterX = newDrawX + (this.width / 2),
+    newCenterY = newDrawY + (this.height / 2);
+    for(var i = 0; i < obstacles.length; i++){
+        if(obstacles[i].leftX < newCenterX && newCenterX < obstacles[i].rightX && obstacles[i].topY - 20 < newCenterY && newCenterY < obstacles[i].bottomY - 20){
+            obstacleCounter = 0;
+        }else{
+            obstacleCounter++;
+        }
+    }
+
+    if(obstacleCounter === obstacles.length){
+        return false;
+    }else{
+        return true;
+    }
+
 };
 
 function Obstacle(x, y, w, h){
@@ -135,7 +172,7 @@ function Obstacle(x, y, w, h){
     this.bottomY = this.drawY + this.height;
 }
 
-function definObjects() {
+function defineObstacles() {
     var treeWidth = 65,
         treeHeight = 90,
         rockDimensions = 30,
