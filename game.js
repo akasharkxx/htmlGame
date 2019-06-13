@@ -76,7 +76,7 @@ function Player() {
     this.isRightKey = false;
     this.isLeftKey = false;
     this.isSpacebar = false;
-    // this.isShooting = false;
+    this.isShooting = false;
     var numBullets = 10;
     this.bullets = [];
     this.currentBullet = 0;
@@ -106,12 +106,12 @@ Player.prototype.update = function (){
     this.centerX = this.drawX + (this.width / 2);
     this.centerY = this.drawY + (this.height / 2);
     this.checkDirection();
-    //this.checkShooting();
-    // this.updateAllBullets();
+    this.checkShooting();
+    this.updateAllBullets();
 };
 
 Player.prototype.draw = function(){
-    // this.drawAllBullets();
+    this.drawAllBullets();
     ctxEntities.drawImage(imgSprite, this.srcX, this.srcY, this.width, this.height, this.drawX, this.drawY, this.width, this.height);
 };
 
@@ -191,9 +191,10 @@ Bullet.prototype.draw = function(){
 
 Bullet.prototype.fire = function(startX, startY){
     var soundEffect = new Audio("audio/shooting.wav");
+    soundEffect.play();
     this.drawX = startX;
     this.drawY = startY;
-    if(player1,srcX === 0){ //facing south
+    if(player1.srcX === 0){ //facing south
         this.xVel = 0;
         this.yVel = this.speed;
     } else if(player1.srcX === 35){//Facing north
@@ -204,7 +205,7 @@ Bullet.prototype.fire = function(startX, startY){
         this.xVel = -this.speed;
     } else if(player1.srcX === 105){//Facing east
         this.yVel = 0;
-        this.xVel = -this.speed;
+        this.xVel = this.speed;
     }
     this.isFlying = true;
 };
@@ -235,6 +236,35 @@ Bullet.prototype.checkOutOfBounds = function(){
         this.recycle();
     }
 };
+
+Player.prototype.checkShooting = function() {
+    if(this.isSpacebar && !this.isShooting){
+        this.isShooting = true;
+        this.currentBullet++;
+        this.bullets[this.currentBullet].fire(this.centerX, this.centerY);
+        if(this.currentBullet >= this.bullets.length){
+            this.currentBullet = 0;
+        }
+    } else if(!this.isSpacebar){
+        this.isShooting = false;
+    }
+}
+
+Player.prototype.updateAllBullets = function(){
+    for(var i = 0; i < this.bullets.length; i++){
+        if(this.bullets[i].isFlying){
+            this.bullets[i].update();
+        }
+    }
+}
+
+Player.prototype.drawAllBullets = function(){
+    for(var i = 0; i < this.bullets.length; i++){
+        if(this.bullets[i].isFlying){
+            this.bullets[i].draw();
+        }
+    }
+}
 
 function Obstacle(x, y, w, h){
     this.drawX = x;
