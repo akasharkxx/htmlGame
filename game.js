@@ -161,6 +161,36 @@ Player.prototype.checkObstacleCollide = function(newDrawX, newDrawY){
 
 };
 
+function Bullet(){
+    this.radius = 2;
+    this.width = this.radius * 2;
+    this.height = this.radius * 2;
+    this.drawX = 0;
+    this.drawY = 0;
+    this.isFlying = false;
+    this.xVel = 0;
+    this.yVel = 0;
+    this.speed = 6;
+}
+
+Bullet.prototype.update = function(){
+    this.drawX += this.xVel;
+    this.drawY += this.yVel;
+    // this.checkHitEnemy();
+    // this.checkHitObstacle();
+    // this.checkOutOfBounds();
+}
+
+Bullet.prototype.draw = function(){
+    ctxEntities.fillstyles = "white";
+    ctxEntities.beginPath();
+    ctxEntities.arc(this.drawX, this.drawY, this.radius, 0, Math.PI * 2, false);
+    ctxEntities.closePath();
+    ctxEntities.fill();
+}
+
+Bullet.prototype
+
 function Obstacle(x, y, w, h){
     this.drawX = x;
     this.drawY = y;
