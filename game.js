@@ -77,12 +77,12 @@ function Player() {
     this.isLeftKey = false;
     this.isSpacebar = false;
     // this.isShooting = false;
-    // var numBullets = 10;
-    // this.bullets = [];
-    // this.currentBullet = 0;
-    // for(var i = 0, i < numBullets; i++){
-        // this.bullets[this.bullets.length] = new Bullet();
-    // }
+    var numBullets = 10;
+    this.bullets = [];
+    this.currentBullet = 0;
+    for(var i = 0; i < numBullets; i++){
+        this.bullets[this.bullets.length] = new Bullet();
+    }
 }
 
 function Enemy(){
@@ -107,11 +107,11 @@ Player.prototype.update = function (){
     this.centerY = this.drawY + (this.height / 2);
     this.checkDirection();
     //this.checkShooting();
-    //this.updateAllBullets();
+    // this.updateAllBullets();
 };
 
 Player.prototype.draw = function(){
-    //this.drawAllBullets();
+    // this.drawAllBullets();
     ctxEntities.drawImage(imgSprite, this.srcX, this.srcY, this.width, this.height, this.drawX, this.drawY, this.width, this.height);
 };
 
@@ -176,10 +176,10 @@ function Bullet(){
 Bullet.prototype.update = function(){
     this.drawX += this.xVel;
     this.drawY += this.yVel;
-    // this.checkHitEnemy();
-    // this.checkHitObstacle();
-    // this.checkOutOfBounds();
-}
+    this.checkHitEnemy();
+    this.checkHitObstacle();
+    this.checkOutOfBounds();
+};
 
 Bullet.prototype.draw = function(){
     ctxEntities.fillstyles = "white";
@@ -187,9 +187,54 @@ Bullet.prototype.draw = function(){
     ctxEntities.arc(this.drawX, this.drawY, this.radius, 0, Math.PI * 2, false);
     ctxEntities.closePath();
     ctxEntities.fill();
-}
+};
 
-Bullet.prototype
+Bullet.prototype.fire = function(startX, startY){
+    var soundEffect = new Audio("audio/shooting.wav");
+    this.drawX = startX;
+    this.drawY = startY;
+    if(player1,srcX === 0){ //facing south
+        this.xVel = 0;
+        this.yVel = this.speed;
+    } else if(player1.srcX === 35){//Facing north
+        this.xVel = 0;
+        this.yVel = -this.speed;
+    }  else if(player1.srcX === 70){//Facing west
+        this.yVel = 0;
+        this.xVel = -this.speed;
+    } else if(player1.srcX === 105){//Facing east
+        this.yVel = 0;
+        this.xVel = -this.speed;
+    }
+    this.isFlying = true;
+};
+
+Bullet.prototype.recycle = function(){
+    this.isFlying = false;
+};
+
+Bullet.prototype.checkHitEnemy = function(){
+    for(var i = 0; i < enemies.length; i++){
+        if(collision(this,enemies[i]) && !enemies[i].isDead){
+            this.recycle();
+            enemies[i].die();
+        }
+    }
+};
+
+Bullet.prototype.checkHitObstacle = function(){
+    for(var i = 0; i < enemies.length; i++){
+        if(collision(this,obstacles[i])){
+            this.recycle();
+        }
+    }
+};
+
+Bullet.prototype.checkOutOfBounds = function(){
+    if(outOfBounds(this, this.drawX, this.drawY)){
+        this.recycle();
+    }
+};
 
 function Obstacle(x, y, w, h){
     this.drawX = x;
@@ -329,4 +374,11 @@ function outOfBounds(a, x, y) {
         newTopY < treeLineTop ||
         newRightX > treeLineRight ||
         newLeftX < treeLineLeft;
+}
+
+function collision(a, b) {
+    return a.drawX <= b.drawX + b.width &&
+        a.drawX >= b.drawX &&
+        a.drawY <= b.drawY + b.height &&
+        a.drawY >= b.drawY; 
 }
