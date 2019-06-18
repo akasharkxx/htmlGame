@@ -240,8 +240,8 @@ Bullet.prototype.checkOutOfBounds = function(){
 Player.prototype.checkShooting = function() {
     if(this.isSpacebar && !this.isShooting){
         this.isShooting = true;
-        this.currentBullet++;
         this.bullets[this.currentBullet].fire(this.centerX, this.centerY);
+        this.currentBullet++;
         if(this.currentBullet >= this.bullets.length){
             this.currentBullet = 0;
         }
